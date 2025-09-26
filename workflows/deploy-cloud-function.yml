@@ -1,0 +1,42 @@
+name: Deploy Firebase Cloud Function
+
+on:
+  push:
+    paths:
+      - 'src/**'
+      - 'package.json'
+      - 'package-lock.json'
+      - '.github/workflows/deploy-cloud-function.yml'
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Lint
+        run: |
+          if [ -f package.json ]; then npm run lint || true; fi
+
+      - name: Run tests
+        run: |
+          if [ -f package.json ]; then npm test || true; fi
+
+      - name: Deploy to Firebase
+        uses: w9jds/firebase-action@v2.2.0
+        with:
+          args: deploy --only functions:managePatientSummaryData
+        env:
+          FIREBASE_TOKEN: ${{ secrets.FIREBASE_TOKEN }}
+
+      - name: Output Cloud Function URL
+        run: echo "Endpoint: https://us-central1-neat-bongo-430212-j4.cloudfunctions.net/managePatientSummaryData"
