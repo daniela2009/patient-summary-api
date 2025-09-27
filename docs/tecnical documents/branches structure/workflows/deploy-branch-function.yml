@@ -1,27 +1,17 @@
-name: Deploy Cloud Function by Branch Type
+name: Deploy Cloud Function from Branch
 
 on:
   push:
     branches:
-      - feature/allergies
-      - feature/goals
-      - feature/message
-      - feature/screenings
-      - feature/social-history
-      - feature/encounter
+      - feature/*
+      - bugfix/*
+      - hotfix/*
+      - release/*
     paths:
       - 'src/**'
       - 'package.json'
       - 'package-lock.json'
-      - '.github/workflows/deploy-type-function.yml'
-  pull_request:
-    branches:
-      - feature/allergies
-      - feature/goals
-      - feature/message
-      - feature/screenings
-      - feature/social-history
-      - feature/encounter
+      - '.github/workflows/deploy-branch-function.yml'
 
 jobs:
   build-and-deploy:
@@ -46,7 +36,7 @@ jobs:
         run: |
           if [ -f package.json ]; then npm test || true; fi
 
-      - name: Deploy to Firebase (Branch Type)
+      - name: Deploy to Firebase (Branch)
         uses: w9jds/firebase-action@v2.2.0
         with:
           args: deploy --only functions:managePatientSummaryData
