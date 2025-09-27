@@ -1,2 +1,5 @@
 # Prueba de push en branch allergies
+# Este archivo activa el workflow de GitHub Actions para el branch feature/allergies.
+# El workflow está configurado para ejecutarse cada 4 horas y al hacer push.
+# La acción ejecuta una función que realiza una lectura de la acción en feature/allergies.
 # Activando workflow con push directo
